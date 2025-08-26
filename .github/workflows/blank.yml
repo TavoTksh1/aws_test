@@ -51,3 +51,6 @@ jobs:
             
       - name: List buckets
         run: aws s3 ls
+        
+      - name: Upload buckets
+        run: aws s3 cp utils.py s3:util//primer-bucket-765/ 

@@ -54,3 +54,27 @@ jobs:
         
       - name: Upload buckets
         run: aws s3 cp utils.py s3://primer-bucket-765/ 
+        
+      jobs:
+        deploy:
+          runs-on: ubuntu-latest
+          steps:
+            - uses: actions/checkout@v3
+      
+            - name: Setup and test
+              run: |
+                python3 -m venv env
+                source env/bin/activate
+                pip install -r requirements.txt
+                pytest
+      
+            - name: Deploy or update Zappa
+              run: |
+                source env/bin/activate
+                if zappa status; then
+                  zappa update dev
+                else
+                  zappa deploy dev
+                fi
+                zappa invoke dev app.f
+

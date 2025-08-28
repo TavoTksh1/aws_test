@@ -55,20 +55,19 @@ jobs:
       - name: Upload buckets
         run: aws s3 cp utils.py s3://primer-bucket-765/ 
         
-      - name: Setup and test
+      - name: Setup environment and run tests
         run: |
           python3 -m venv env
           source env/bin/activate
           pip install -r requirements.txt
           pytest
 
-      - name: Deploy or update Zappa
+      - name: Deploy or update with Zappa
         run: |
           source env/bin/activate
-          if zappa status; then
+          if zappa status dev > /dev/null 2>&1; then
             zappa update dev
           else
             zappa deploy dev
           fi
           zappa invoke dev app.f
-
